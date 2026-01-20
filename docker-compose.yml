@@ -32,7 +32,7 @@ services:
     build: 
       context: ./dcelery 
       dockerfile: Dockerfile 
-    # command: ["celery", "-A", "dcelery", "worker", "--loglevel=info"]
+    command: ["celery", "-A", "dcelery", "worker", "--loglevel=info"]
     #the volumes is a means of making our work available to the container by mounting the current directory to the container's working directory.
     volumes: 
       - .:/usr/src/app
