@@ -1,0 +1,43 @@
+services:
+
+  redis: 
+    image: "redis:7.0.11-alpine" # use the official Redis image from Docker Hub
+    container_name: redis
+    
+  django: # a name for the single service
+    container_name: django
+    build: # build instructions
+      context: ./dcelery # path to the directory with the Dockerfile that specifies how to build the image
+      dockerfile: Dockerfile # name of the Dockerfile
+    command: ["python", "manage.py", "runserver", "0.0.0.0:8000"]
+    volumes: # mount the code directory into the container to reflect code changes
+      # host path (on my machine) : container path (in the container)
+      - .:/usr/src/app
+
+    ports: #access the service via localhost
+      # local port : container port
+      - "8001:8000"
+    environment:
+      - SECRET_KEY=12234abcd5678efgh91011ijklmnop12
+      - DEBUG=1
+      - ALLOWED_HOSTS=localhost,127.0.0.1
+    depends_on: # specify dependencies
+      - redis
+
+# Celery worker service, its configuration is similar to the Django service, 
+# think of it as another Django instance that only runs the Celery worker process but not the web server.
+# we are running other similar process but on another server so as to distribute the load.
+  celery: 
+    container_name: celery
+    build: 
+      context: ./dcelery 
+      dockerfile: Dockerfile 
+    # command: ["celery", "-A", "dcelery", "worker", "--loglevel=info"]
+    volumes: 
+      - .:/usr/src/app
+    environment:
+      - SECRET_KEY=12234abcd5678efgh91011ijklmnop12
+      - DEBUG=1
+      - ALLOWED_HOSTS=localhost,127.0.0.1
+    depends_on: # specify dependencies
+      - redis
