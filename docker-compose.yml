@@ -8,7 +8,7 @@ services:
     container_name: django
     build: # build instructions
       context: . # path to the files to build the Docker image those that docker can see
-      dockerfile: /dcelery/Dockerfile # name of the Dockerfile
+      dockerfile: dcelery/Dockerfile # name of the Dockerfile
     command: ["python", "manage.py", "runserver", "0.0.0.0:8000"]
     volumes: # mount the code directory into the container to reflect code changes
       # host path (on my machine) : container path (in the container)
@@ -30,8 +30,8 @@ services:
   celery: 
     container_name: celery
     build: 
-      context: ./dcelery 
-      dockerfile: /dcelery/Dockerfile 
+      context: .
+      dockerfile: dcelery/Dockerfile 
     command: ["celery", "-A", "dcelery", "worker", "--loglevel=info"]
     #the volumes is a means of making our work available to the container by mounting the current directory to the container's working directory.
     volumes: 

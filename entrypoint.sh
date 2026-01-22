@@ -1,7 +1,7 @@
 #!/bin/sh
+set -e
 
 echo "run migrations"
-python manage.py migrate
+python manage.py migrate --noinput
 
-# the command to execute the commands passed in this entrypoint.sh
 exec "$@"
