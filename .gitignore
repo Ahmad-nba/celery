@@ -30,12 +30,13 @@ celerybeat-schedule
 celerybeat.pid
 *.pid
 
-####################################
 # Environment / secrets
-####################################
 .env
 .env.*
 *.env
+
+# But keep a example file in the repo
+!.env.example
 
 ####################################
 # Docker
