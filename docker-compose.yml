@@ -32,7 +32,7 @@ services:
     build: 
       context: .
       dockerfile: dcelery/Dockerfile 
-    command: ["celery", "-A", "dcelery", "worker", "--loglevel=info"]
+    command: ["celery", "-A", "dcelery", "worker", "--loglevel=info", "-Q", "queue1"]
     #the volumes is a means of making our work available to the container by mounting the current directory to the container's working directory.
     volumes: 
       - .:/usr/src/app
@@ -42,3 +42,15 @@ services:
       - ALLOWED_HOSTS=localhost,127.0.0.1
     depends_on: # specify dependencies
       - redis
+  celery_independent:
+    container_name: celery_independent
+    build: 
+      context: ./celery_independent
+      dockerfile: Dockerfile 
+    command: ["celery", "-A", "celery_independent", "worker", "--loglevel=info", "-Q", "queue2"]
+    #the volumes is a means of making our work available to the container by mounting the current directory to the container's working directory.
+    volumes: 
+      - .:/usr/src/app
+    depends_on: # specify dependencies
+      - redis  
+      - django    
